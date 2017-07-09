@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<settings>
+<sequence>3</sequence>
+<leftButton>1</leftButton>
+<rightButton>2</rightButton>
+<playButton>3</playButton>
+<playAgainButton>0</playAgainButton>
+<increasingDifficulty>0</increasingDifficulty> <!-- can be 1 or 0 -->
+</settings>
+
+<!-- <![CDATA[ ]]> -->

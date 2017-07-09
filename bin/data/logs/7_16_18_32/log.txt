@@ -1,0 +1,19 @@
+Game num: 1
+Sequence of: 3
+Difficulty: 10
+Repeated num of time: 0
+---------------- 
+
+Notes Sequence 9
+Notes Sequence 3
+Notes Sequence 4
+---------------- 
+
+Winning Sequence 1
+Winning Sequence 0
+Winning Sequence 1
+---------------- 
+
+Game Lost
+---------------- 
+

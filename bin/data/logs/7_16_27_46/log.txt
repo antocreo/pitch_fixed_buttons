@@ -1,0 +1,134 @@
+Game num: 1
+Sequence of: 3
+Difficulty: 9
+Repeated num of time: 0
+---------------- 
+
+Notes Sequence 7
+Notes Sequence 11
+Notes Sequence 6
+---------------- 
+
+Winning Sequence 0
+Winning Sequence 1
+Winning Sequence 0
+---------------- 
+
+Game Lost
+---------------- 
+
+Game num: 2
+Sequence of: 3
+Difficulty: 9
+Repeated num of time: 2
+---------------- 
+
+Notes Sequence 6
+Notes Sequence 9
+Notes Sequence 2
+---------------- 
+
+Winning Sequence 0
+Winning Sequence 1
+Winning Sequence 0
+---------------- 
+
+Game Lost
+---------------- 
+
+Game num: 3
+Sequence of: 3
+Difficulty: 10
+Repeated num of time: 1
+---------------- 
+
+Notes Sequence 9
+Notes Sequence 6
+Notes Sequence 1
+---------------- 
+
+Winning Sequence 1
+Winning Sequence 0
+Winning Sequence 0
+---------------- 
+
+Pressed Sequence 1
+Pressed Sequence 0
+Pressed Sequence 0
+---------------- 
+
+Game Won
+---------------- 
+
+Game num: 4
+Sequence of: 3
+Difficulty: 8
+Repeated num of time: 0
+---------------- 
+
+Notes Sequence 7
+Notes Sequence 2
+Notes Sequence 8
+---------------- 
+
+Winning Sequence 1
+Winning Sequence 0
+Winning Sequence 1
+---------------- 
+
+Pressed Sequence 1
+Pressed Sequence 0
+Pressed Sequence 1
+---------------- 
+
+Game Won
+---------------- 
+
+Game num: 5
+Sequence of: 3
+Difficulty: 9
+Repeated num of time: 0
+---------------- 
+
+Notes Sequence 6
+Notes Sequence 11
+Notes Sequence 7
+---------------- 
+
+Winning Sequence 0
+Winning Sequence 1
+Winning Sequence 0
+---------------- 
+
+Pressed Sequence 0
+Pressed Sequence 1
+Pressed Sequence 0
+---------------- 
+
+Game Won
+---------------- 
+
+Game num: 6
+Sequence of: 3
+Difficulty: 8
+Repeated num of time: 0
+---------------- 
+
+Notes Sequence 0
+Notes Sequence 2
+Notes Sequence 12
+---------------- 
+
+Winning Sequence 0
+Winning Sequence 1
+Winning Sequence 1
+---------------- 
+
+Pressed Sequence 0
+Pressed Sequence 0
+Pressed Sequence 1
+---------------- 
+
+Game Lost
+---------------- 
+
