@@ -5,4 +5,4 @@ Drafting the code to control a musical toy designed for children on the autism s
 The toy will engage the children in pitch recognition, motor coordination, memory and collaboration.
 
 * * * * *
-This version has variable buttons
+This version has fixed  buttons
