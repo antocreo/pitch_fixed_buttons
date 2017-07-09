@@ -38,58 +38,7 @@ void ofApp::setup() {
     bButtonsActive = false; //let's start with left and right buttons not active
     bLoadSeq = false;
     
-    //XML settings
-    //load the xml
-    settings.load("settings.xml");
-    
-    //increasing difficulty set the variable
-    if(settings.exists("//increasingDifficulty")) {
-        bIncreasingDifficulty	= settings.getValue<int>("//increasingDifficulty");
-    } else{
-        bIncreasingDifficulty = true;   //default is true
-    }
-    
-    //check if it exists, then set the commands
-    if(settings.exists("//sequence")) {
-        counter	= settings.getValue<int>("//sequence");
-    } else{
-        counter = MAX_SEQUENCE;    //we start with a sequence of 3 - this keeps the value of num of notes in the sequence
-    }
-    if(settings.exists("//leftButton")) {
-        leftKey = settings.getValue<char>("//leftButton");
-    } else{
-        leftKey = 'a';
-    }
-    if(settings.exists("//rightButton")) {
-        rightKey = settings.getValue<char>("//rightButton");
-    } else {
-        rightKey = 'l';
-    }
-    //    if(settings.exists("//playButton")) {
-    //        if(!settings.getValue<string>("//playButton").empty()){
-    //        playKey = settings.getValue<string>("//playButton")[0];
-    ////            cout << playKey << endl;
-    //        }
-    //        string str = settings.getValue<string>("//playButton");
-    //        for(int i = 0; i < str.size(); i++){
-    //            cout << str[i] << endl;
-    //        }
-    //    } else {
-    //        playKey = ' ';
-    //    }
-    
-    if(settings.exists("//playButton") && !settings.getValue<string>("//playButton").empty()) {
-        playKey = settings.getValue<string>("//playButton");
-    } else {
-        playKey = ' ';
-    }
-    
-    if(settings.exists("//playAgainButton")) {
-        playAgainKey = settings.getValue<char>("//playAgainButton");
-    } else {
-        playAgainKey = 'r';
-    }
-    
+    setupXML();
     
     playerCounter = 0;
     playAgainCounter = 0;
@@ -249,31 +198,38 @@ void ofApp::keyReleased(int key) {
     
     
     if (key == leftKey) {
+   
+       /* 
         if (bButtonsActive) {
             
             leftButt.setbActive(false);
             
             //control the sequence insertion
             leftButt.setbPitch(false);
-            //whatever button will be pressed at the beginning it will always be true;
+
             pressedSequence.push_back(leftButt.getbPitch());
             player[randomSequence[pressedSequence.size()-1]].play();
             
         }
+        */
+        activateButton(leftButt, false);
     }
     
     if (key == rightKey) {
+        /*
         if (bButtonsActive) {
             
             rightButt.setbActive(false);
             
             //control the sequence insertion
             rightButt.setbPitch(true);
-            //whatever button will be pressed at the beginning it will always be true;
+
             pressedSequence.push_back(rightButt.getbPitch());
             player[randomSequence[pressedSequence.size()-1]].play();
             
         }
+        */
+        activateButton(rightButt, true);
     }
     
     //play button is a toggle
@@ -303,41 +259,58 @@ void ofApp::keyReleased(int key) {
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button) {
     
+    //LEFT BUTTON
     if (leftButt.getRectangle().inside(x, y)) {
         if (bButtonsActive) {
             leftButt.setbActive(true);
         }
     }
+    //RIGHT BUTTON
     if (rightButt.getRectangle().inside(x, y)) {
         if (bButtonsActive) {
             rightButt.setbActive(true);
         }
     }
     
+    //PLAY AGAIN BUTTON
+    if (playAgain.getRectangle().inside(x, y)) {
+        if (bButtonsActive) {
+            playAgain.setbActive(!playAgain.getbActive());
+        }
+
+    }
     
 }
 
 //--------------------------------------------------------------
 void ofApp::mouseReleased(int x, int y, int button){
     
+    //LEFT BUTTON
     if (leftButt.getRectangle().inside(x, y)) {
-        if (bButtonsActive) {
-            
-            leftButt.setbActive(false);
-        }
+        activateButton(leftButt, false);
     }
+    
+    //RIGHT BUTTON
     if (rightButt.getRectangle().inside(x, y)) {
+        activateButton(rightButt, true);
+    }
+    
+    
+    //PLAY BUTTON
+    if (playSeq.getRectangle().inside(x, y)) {
+        togglePlay();
+    }
+    
+    
+    //PLAY AGAIN BUTTON
+    if (playAgain.getRectangle().inside(x, y)) {
         if (bButtonsActive) {
-            
-            rightButt.setbActive(false);
+            playAgain.setbActive(!playAgain.getbActive());
+            playAgainCounter++; // for log stats
+            playerCounter = 0;
+            player[randomSequence[playerCounter]].play();
         }
     }
-    
-    //play button is a toggle
-    if (playSeq.getRectangle().inside(x, y)) {
-        playSeq.setbActive(!playSeq.getbActive());
-    }
-    
 }
 
 
@@ -628,3 +601,66 @@ float ofApp::difficulty(){
     return abs (floor((NUM_TONES) - ( tempDiff / divider )) );
 }
 
+//--------------------------------------------------------------
+
+
+void ofApp::activateButton(Button &b, bool val){
+
+    if (bButtonsActive) {
+        
+        b.setbActive(false);
+        
+        //control the sequence insertion
+        b.setbPitch(val);
+
+        pressedSequence.push_back(b.getbPitch());
+        player[randomSequence[pressedSequence.size()-1]].play();
+        
+    }
+}
+
+//--------------------------------------------------------------
+
+void ofApp::setupXML(){
+
+    //XML settings
+    //load the xml
+    settings.load("settings.xml");
+    
+    //increasing difficulty set the variable
+    if(settings.exists("//increasingDifficulty")) {
+        bIncreasingDifficulty	= settings.getValue<int>("//increasingDifficulty");
+    } else{
+        bIncreasingDifficulty = true;   //default is true
+    }
+    
+    //check if it exists, then set the commands
+    if(settings.exists("//sequence")) {
+        counter	= settings.getValue<int>("//sequence");
+    } else{
+        counter = MAX_SEQUENCE;    //we start with a sequence of 3 - this keeps the value of num of notes in the sequence
+    }
+    if(settings.exists("//leftButton")) {
+        leftKey = settings.getValue<char>("//leftButton");
+    } else{
+        leftKey = 'a';
+    }
+    if(settings.exists("//rightButton")) {
+        rightKey = settings.getValue<char>("//rightButton");
+    } else {
+        rightKey = 'l';
+    }
+    
+    if(settings.exists("//playButton") && !settings.getValue<string>("//playButton").empty()) {
+        playKey = settings.getValue<string>("//playButton");
+    } else {
+        playKey = ' ';
+    }
+    
+    if(settings.exists("//playAgainButton")) {
+        playAgainKey = settings.getValue<char>("//playAgainButton");
+    } else {
+        playAgainKey = 'r';
+    }
+
+}

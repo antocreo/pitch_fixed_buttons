@@ -37,7 +37,8 @@ public:
     
     void defineButton(int);     //according to who pushes define if button is higher or lower.
     void checkPushedButton (Button up, Button down);
-    
+    void activateButton(Button &b, bool val);
+    void setupXML();
     
     void checkNote();
     void checkPreviousNote();
@@ -65,6 +66,8 @@ public:
     bool bPlaySeq;
     bool bLoadSeq;
     bool bDebug;
+    bool bIncreasingDifficulty;
+
 
     vector <ofSoundPlayer> player;
     vector<int>randomSequence;
@@ -78,7 +81,6 @@ public:
     WriteFile log;
     ofXml settings;
     char leftKey, rightKey, playAgainKey;
-    bool bIncreasingDifficulty;
     string playKey;
     
 };
