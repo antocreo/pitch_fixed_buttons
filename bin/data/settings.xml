@@ -5,7 +5,7 @@
 <leftButton>1</leftButton>
 <rightButton>2</rightButton>
 <playButton>3</playButton>
-<playAgainButton>0</playAgainButton>
+<playAgainButton>.</playAgainButton>
 <increasingDifficulty>0</increasingDifficulty> <!-- can be 1 or 0 -->
 </settings>
 

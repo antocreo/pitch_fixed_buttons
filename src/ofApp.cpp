@@ -27,7 +27,7 @@ void ofApp::setup() {
     for (int i = 0; i <(int) dir.size(); i++) {
         
         player.push_back(*new ofSoundPlayer);
-        player[i].load(dir.getPath(i));
+        player[i].load(dir.getPath(i), true);
     }
     
     
@@ -51,11 +51,13 @@ void ofApp::setup() {
     log.setup("log");
     
     
+    
 }
 
 //--------------------------------------------------------------
 void ofApp::update() {
     
+    ofSoundUpdate();
     
     //PLAY BUTTON
     //check the button is toggled and that the players and the sequence is filled
