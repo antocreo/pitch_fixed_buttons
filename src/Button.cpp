@@ -14,6 +14,8 @@
 //--------------------------------------------------------------
 Button::Button(){
     
+
+    
     buttColor.set(150, 30, 10);
     activeColor.set(30,150,10);
     lineColor.set(200, 100, 80, 255);
@@ -29,6 +31,9 @@ Button::Button(){
     buttonRect.setPosition(0, 0);
     
     timer = 0;
+    
+//    iconPath = "";
+//    buttonIcon.load("images/" + iconPath);
 
 }
 
@@ -47,48 +52,46 @@ void Button::loadFont(string fontName, float size){
 }
 
 //----------------------------------rectangle---------------------
-void Button::draw(float x, float y, float width, float height, float roundness, string label){
+void Button::draw(float x, float y, float width, float height, string label){
     
     buttonRect.set(x,y, width, height);        //rectangle button
-    ofRectangle textRect = text.getStringBoundingBox(label, buttonRect.getCenter().x,
-                                                     buttonRect.getCenter().y); //rectangle Label
+//    ofRectangle textRect = text.getStringBoundingBox(label, buttonRect.getCenter().x,
+//                                                     buttonRect.getCenter().y); //rectangle Label
 
     ofFill();
-
     
-    
-    if (bActive == true) {
+//    ofPushStyle();
+//    if (bActive == true) {
+//        ofSetColor(activeColor);
+//    } else if (bActive == false) {
+//        ofSetColor(buttColor);
+//    }
+//        ofDrawEllipse(buttonRect.x + width/2, buttonRect.y + height/2, width, height);
+//    
+//    ofPopStyle();
 
-        ofSetColor(activeColor);
-        ofDrawRectRounded(buttonRect, roundness);
-
+        buttonIcon.load("images/" + label);
+        buttonIcon.draw(buttonRect.x , buttonRect.y, width,height);
+/*
         labelColor.set(255);
         ofSetColor(labelColor);
         text.drawString(label, buttonRect.getCenter().x - textRect.getWidth()/2,
                         buttonRect.getCenter().y + textRect.getHeight()/2);
-        
-    }
-    if(bActive == false) {
-
-        ofSetColor(buttColor);
-        ofDrawRectRounded(buttonRect, roundness);
-
-        labelColor.set(0);
-        ofSetColor(labelColor);
-        text.drawString(label, buttonRect.getCenter().x - textRect.getWidth()/2,
-                        buttonRect.getCenter().y + textRect.getHeight()/2);
-    }
+ 
     
     //line around rectangle
     ofNoFill();
     ofSetColor(lineColor);
     ofSetLineWidth(2);
-    ofDrawRectRounded(buttonRect, roundness);
+    ofDrawEllipse(buttonRect.x, buttonRect.y, width, height);
+ 
+ */
 
 }
 
 
 //-------------------------------ellipse----------------------
+/*
 void Button::draw(float x, float y, float width, float height, string label){
     
     buttonRect.set(x,y, width, height);        //rectangle button
@@ -131,6 +134,7 @@ void Button::draw(float x, float y, float width, float height, string label){
 
 //    ofDrawRectangle(buttonRect);
 }
+ */
 
 //--------------------------------------------------------------
 void Button::keyReleased(int key)  {

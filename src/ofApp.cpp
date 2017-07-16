@@ -4,7 +4,10 @@
 void ofApp::setup() {
     
     ofSetCircleResolution(60);
-    ofBackground(0);
+    ofBackground(200);
+    ofEnableBlendMode(OF_BLENDMODE_ALPHA);
+    ofSetBackgroundAuto(true);
+
     
     
     //loading buttons
@@ -116,33 +119,50 @@ void ofApp::update() {
 
 //--------------------------------------------------------------
 void ofApp::draw() {
-    
-    float playX = ofGetWidth()/2 - ofGetWidth()/8;
-    float playY = ofGetHeight()/4;
-    float playW = ofGetWidth()/4;
-    float playH = ofGetWidth()/4;
-    float margin = 30;
+
+    float playW = 400;
+    float playX = (ofGetWidth() - playW)/2;
+    float playY = (ofGetHeight() - playW)/2;
+    float margin = 30 ;
     
     if (!bGameover){
         
-        //draw buttons
-        ofPushStyle();
-        //LEFT
-        leftButt.draw(margin, ofGetHeight()/4, ofGetWidth()/3, ofGetWidth()/3, leftButtLabel);
-        
-        //PLAY
-        if(!playSeq.getbActive()) {
-            playSeq.draw(playX, playY, playW, playH, 10, "PLAY");
-        } else     playSeq.draw(playX, playY, playW, playH, 10, "STOP");
-        
-        //PLAY AGAIN
-        if(!playAgain.getbActive()) {
-            playAgain.draw(playX, playY + playH + margin, playW, playH/3, 10, "PLAY AGAIN");
-        } else     playAgain.draw(playX, playY + playH + margin, playW, playH/3, 10, "STOP");
-        
-        //RIGHT
-        rightButt.draw(ofGetWidth()/3 * 2 - margin, ofGetHeight()/4, ofGetWidth()/3, ofGetWidth()/3, rightButtLabel);
-        ofPopStyle();
+        if (!bButtonsActive) {
+            ofPushStyle();
+            //PLAY
+            if(!playSeq.getbActive()) {
+                playSeq.draw(playX, playY, playW, playW, "play_standby.png");
+            } else  playSeq.draw(playX, playY, playW, playW, "play_active.png");
+            
+            ofPopStyle();
+        }
+       
+
+        if (bButtonsActive) {
+            //draw buttons
+            ofPushStyle();
+            //LEFT/DOWN
+            if(!leftButt.getbActive()) {
+                leftButt.draw(margin, playY, playW, playW, "down_standby.png");
+            } else  leftButt.draw(margin, playY, playW, playW, "down_active.png");
+            
+            ofPopStyle();
+            
+            //PLAY AGAIN
+            //        if(!playAgain.getbActive()) {
+            //            playAgain.draw(playX, playY + playH + margin, playW, playH/3, 10, "PLAY AGAIN");
+            //        } else     playAgain.draw(playX, playY + playH + margin, playW, playH/3, 10, "STOP");
+            
+            ofPushStyle();
+            //RIGHT/UP
+            if(!rightButt.getbActive()) {
+                rightButt.draw(ofGetWidth() - margin - playW, playY, playW, playW, "up_standby.png");
+            } else  rightButt.draw(ofGetWidth() - margin - playW, playY, playW, playW, "up_active.png");
+            
+            ofPopStyle();
+
+        }
+       
     }
     
     //drawing debug overlayed //leave it at the bottom
@@ -235,7 +255,7 @@ void ofApp::keyReleased(int key) {
     }
     
     //play button is a toggle
-    if (key == ofToChar(playKey) ) {
+    if (!bButtonsActive && key == ofToChar(playKey) ) {
         togglePlay();
     }
     
@@ -299,7 +319,7 @@ void ofApp::mouseReleased(int x, int y, int button){
     
     
     //PLAY BUTTON
-    if (playSeq.getRectangle().inside(x, y)) {
+    if (!bButtonsActive && playSeq.getRectangle().inside(x, y)) {
         togglePlay();
     }
     

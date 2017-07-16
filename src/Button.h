@@ -13,8 +13,8 @@ public:
     Button();
     void update();
     void loadFont(string fontName, float size);
-    void draw(float x, float y, float width, float height, float roundness, string label);
     void draw(float x, float y, float width, float height, string label);
+//    void draw(float x, float y, float width, float height, string label);
 
     void keyPressed(int key);
     void keyReleased(int key);
@@ -44,6 +44,11 @@ public:
     void TimerDecrease();
     long getTimer();
     
+    
+    
+    ofImage buttonIcon;
+    string iconPath;
+    
 private:
     ofVec2f pos;
 
@@ -55,6 +60,7 @@ private:
     ofTrueTypeFont text;
     ofRectangle buttonRect;
     long timer;
+   
 
 };
 
