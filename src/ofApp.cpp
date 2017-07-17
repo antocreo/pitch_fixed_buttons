@@ -8,7 +8,7 @@ void ofApp::setup() {
     ofEnableBlendMode(OF_BLENDMODE_ALPHA);
     ofSetBackgroundAuto(true);
 
-    
+    bg.load("images/bg.png");
     
     //loading buttons
     leftButt.loadFont("ArialBold.ttf", 20);
@@ -52,8 +52,7 @@ void ofApp::setup() {
     
     //saving the file
     log.setup("log");
-    
-    
+
     
 }
 
@@ -61,6 +60,10 @@ void ofApp::setup() {
 void ofApp::update() {
     
     ofSoundUpdate();
+    //update buttons only for the animation pulse.
+    leftButt.update(1, player[randomSequence[pressedSequence.size()-1]], .2);
+    rightButt.update(1, player[randomSequence[pressedSequence.size()-1]], .2);
+    playSeq.update(1, player[randomSequence[playerCounter]], .2);
     
     //PLAY BUTTON
     //check the button is toggled and that the players and the sequence is filled
@@ -68,9 +71,11 @@ void ofApp::update() {
     if (playSeq.getbActive()) {
         if (bLoadSeq && !player[randomSequence[playerCounter]].isPlaying()){
             playSequence();
+            playSeq.setbPulse(true);
         }
         else if (bLoadSeq && !playSeq.getbActive()) {
             emptySequence();
+            playSeq.setbPulse(false);
         }
     }
     
@@ -89,7 +94,7 @@ void ofApp::update() {
     //let's check the first button pressed (pressedSeq is empty) and assign the first value as true (like in the realSequence)
     
     //deactivate the buttons again if you press x counter times.
-    if (pressedSequence.size() >= realSequence.size()) {
+    if (pressedSequence.size() >= realSequence.size() && !player[randomSequence[playerCounter]].isPlaying()) {
         bButtonsActive = false;
     }
     
@@ -103,7 +108,7 @@ void ofApp::update() {
     //WIN OR LOSE
     //let's check if the sequence is the same
     //checking the size
-    if (pressedSequence.size() > 0 && pressedSequence.size() == realSequence.size()) {
+    if (pressedSequence.size() > 0 && pressedSequence.size() == realSequence.size() && !player[randomSequence[playerCounter]].isPlaying()) {
         
         bGameover = true;
         
@@ -115,24 +120,35 @@ void ofApp::update() {
         } else !bWin;
     }
     
+   
+     
 }
 
 //--------------------------------------------------------------
 void ofApp::draw() {
 
+
+    bg.draw(0, 0, ofGetWidth(), ofGetHeight());
+    
+//    ofDrawBitmapString(ofToString(bPulse), 10, 10);
+//    ofDrawBitmapString(ofToString(pressedSequence.size()-1), 10, 20);
+//    
+    
+    
     float playW = 400;
+    float plAgW = playW/2;
     float playX = (ofGetWidth() - playW)/2;
     float playY = (ofGetHeight() - playW)/2;
     float margin = 30 ;
     
     if (!bGameover){
         
-        if (!bButtonsActive) {
+        if (!bButtonsActive && pressedSequence.size() == 0) {
             ofPushStyle();
             //PLAY
             if(!playSeq.getbActive()) {
                 playSeq.draw(playX, playY, playW, playW, "play_standby.png");
-            } else  playSeq.draw(playX, playY, playW, playW, "play_active.png");
+            } else playSeq.draw(playX, playY, playW, playW, "play_active.png");
             
             ofPopStyle();
         }
@@ -140,24 +156,27 @@ void ofApp::draw() {
 
         if (bButtonsActive) {
             //draw buttons
-            ofPushStyle();
+
             //LEFT/DOWN
+            ofPushStyle();
             if(!leftButt.getbActive()) {
                 leftButt.draw(margin, playY, playW, playW, "down_standby.png");
-            } else  leftButt.draw(margin, playY, playW, playW, "down_active.png");
-            
+            } else leftButt.draw(margin, playY, playW, playW, "down_active.png");
             ofPopStyle();
             
-            //PLAY AGAIN
-            //        if(!playAgain.getbActive()) {
-            //            playAgain.draw(playX, playY + playH + margin, playW, playH/3, 10, "PLAY AGAIN");
-            //        } else     playAgain.draw(playX, playY + playH + margin, playW, playH/3, 10, "STOP");
-            
-            ofPushStyle();
             //RIGHT/UP
+            ofPushStyle();
             if(!rightButt.getbActive()) {
                 rightButt.draw(ofGetWidth() - margin - playW, playY, playW, playW, "up_standby.png");
             } else  rightButt.draw(ofGetWidth() - margin - playW, playY, playW, playW, "up_active.png");
+            
+            ofPopStyle();
+
+            //PLAY AGAIN
+            ofPushStyle();
+            if(!playAgain.getbActive()) {
+                playAgain.draw((ofGetWidth() - plAgW)/2, ofGetHeight() - plAgW - margin, plAgW, plAgW, "play_active.png");
+            } else     playAgain.draw((ofGetWidth() - plAgW)/2, ofGetHeight() - plAgW - margin, plAgW, plAgW, "play_active.png");
             
             ofPopStyle();
 
@@ -168,7 +187,7 @@ void ofApp::draw() {
     //drawing debug overlayed //leave it at the bottom
     drawDebug(bDebug);
     
-    if (bGameover) {
+    if (bGameover && !player[randomSequence[playerCounter]].isPlaying()) {
         string message;
         if (bWin) {
             message = "WIN";
@@ -193,16 +212,22 @@ void ofApp::keyPressed(int key) {
     if (key == leftKey){
         if (bButtonsActive) {
             leftButt.setbActive(true);
+            resetPulse();
+
         }
     }
     
     if (key == rightKey) {
         if (bButtonsActive) {
             rightButt.setbActive(true);
+            resetPulse();
+
         }
     }
     
     if (key == ofToChar(playKey)) {
+        
+        resetPulse();
         
     }
     
@@ -235,6 +260,8 @@ void ofApp::keyReleased(int key) {
         }
         */
         activateButton(leftButt, false);
+        
+
     }
     
     if (key == rightKey) {
@@ -252,6 +279,7 @@ void ofApp::keyReleased(int key) {
         }
         */
         activateButton(rightButt, true);
+        
     }
     
     //play button is a toggle
@@ -285,19 +313,32 @@ void ofApp::mousePressed(int x, int y, int button) {
     if (leftButt.getRectangle().inside(x, y)) {
         if (bButtonsActive) {
             leftButt.setbActive(true);
+            resetPulse();
         }
     }
     //RIGHT BUTTON
     if (rightButt.getRectangle().inside(x, y)) {
         if (bButtonsActive) {
             rightButt.setbActive(true);
+            resetPulse();
         }
     }
+    
+    //PLAY BUTTON
+    if (playSeq.getRectangle().inside(x, y)) {
+        if (bButtonsActive) {
+            playSeq.setbActive(!playSeq.getbActive());
+            resetPulse();
+        }
+        
+    }
+
     
     //PLAY AGAIN BUTTON
     if (playAgain.getRectangle().inside(x, y)) {
         if (bButtonsActive) {
             playAgain.setbActive(!playAgain.getbActive());
+            resetPulse();
         }
 
     }
@@ -446,6 +487,10 @@ void ofApp::emptySequence(){
         bWin = false;
         playAgainCounter = 0;
         
+        //reset the pulse on the buttons
+        leftButt.setbPulse(false);
+        rightButt.setbPulse(false);
+        playSeq.setbPulse(false);
         
     }
     
@@ -471,6 +516,8 @@ void ofApp::togglePlay(){
         if (player.size() > 0 && randomSequence.size() > 0) {
             if (playerCounter < counter - 1){
                 player[randomSequence[playerCounter]].play();
+                playSeq.setbPulse(true);
+
             }
         }
         
@@ -631,15 +678,23 @@ void ofApp::activateButton(Button &b, bool val){
     if (bButtonsActive) {
         
         b.setbActive(false);
-        
+    
         //control the sequence insertion
         b.setbPitch(val);
 
-        pressedSequence.push_back(b.getbPitch());
-        player[randomSequence[pressedSequence.size()-1]].play();
-        
+        if (pressedSequence.size() < realSequence.size()) {
+            pressedSequence.push_back(b.getbPitch());
+            player[randomSequence[pressedSequence.size()-1]].play();
+        }
+       
+        if (pressedSequence[pressedSequence.size()-1] == realSequence[pressedSequence.size()-1]) {
+            b.setbPulse(true);
+        } else {
+            b.setbPulse(false);
+        }
     }
-}
+    
+   }
 
 //--------------------------------------------------------------
 
@@ -686,3 +741,14 @@ void ofApp::setupXML(){
     }
 
 }
+
+void ofApp::resetPulse(){
+
+    leftButt.setbPulse(false);
+    leftButt.getButtonPulse()->increment = 0;
+    rightButt.setbPulse(false);
+    rightButt.getButtonPulse()->increment = 0;
+    playSeq.setbPulse(false);
+    
+}
+

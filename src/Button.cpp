@@ -26,6 +26,7 @@ Button::Button(){
     bState = false;
     bLastButtState = false;
     bPreviousStatus = NULL;
+    bPulse = false;
 
     
     buttonRect.setPosition(0, 0);
@@ -38,10 +39,14 @@ Button::Button(){
 }
 
 //--------------------------------------------------------------
-void Button::update(){
+void Button::update(int speedModulo, ofSoundPlayer &player, float incrementVariation){
     
+    //updating the pulse button if the hit is correct
+    if (bPulse) {
+        pulse.update(speedModulo, player, incrementVariation);
+    }
 
-    
+
 }
 
 //--------------------------------------------------------------
@@ -69,9 +74,19 @@ void Button::draw(float x, float y, float width, float height, string label){
 //        ofDrawEllipse(buttonRect.x + width/2, buttonRect.y + height/2, width, height);
 //    
 //    ofPopStyle();
+    
+    //if it's correct then play the pulse
+    if (bPulse) {
+        pulse.draw(x + width/2, y + width/2);
+    } 
+
 
         buttonIcon.load("images/" + label);
         buttonIcon.draw(buttonRect.x , buttonRect.y, width,height);
+    
+   
+    
+    
 /*
         labelColor.set(255);
         ofSetColor(labelColor);
@@ -244,6 +259,24 @@ bool Button::getbPitch() {
     
     return bPitch;
 }
+
+//--------------------------------------------------------------
+void Button::setbPulse(bool b) {
+    
+    bPulse = b;
+}
+//--------------------------------------------------------------
+bool Button::getbPulse() {
+    
+    return bPulse;
+}
+
+//--------------------------------------------------------------
+ButtonPulse* Button::getButtonPulse() {
+    
+    return &pulse;
+}
+
 
 
 

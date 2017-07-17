@@ -3,6 +3,7 @@
 #include "ofMain.h"
 #include "Button.h"
 #include "WriteFile.h"
+#include "ButtonPulse.h"
 
 
 #define NUM_TONES 14
@@ -44,7 +45,9 @@ public:
     void checkPreviousNote();
     
     void emptySequence();
+    void drawPulse(float, float, int);
     
+    void resetPulse();
     
     Button leftButt;
     Button  rightButt;
@@ -82,5 +85,8 @@ public:
     ofXml settings;
     char leftKey, rightKey, playAgainKey;
     string playKey;
+    
+    ofImage bg;
+    
     
 };

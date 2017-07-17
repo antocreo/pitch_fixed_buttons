@@ -7,11 +7,12 @@
 //
 
 #include "ofMain.h"
+#include "ButtonPulse.h"
 
 class Button {
 public:
     Button();
-    void update();
+    void update(int speedModulo, ofSoundPlayer &player, float incrementVariation);
     void loadFont(string fontName, float size);
     void draw(float x, float y, float width, float height, string label);
 //    void draw(float x, float y, float width, float height, string label);
@@ -44,10 +45,16 @@ public:
     void TimerDecrease();
     long getTimer();
     
+    bool getbPulse();
+    void setbPulse(bool b);
+    ButtonPulse* getButtonPulse();
     
     
     ofImage buttonIcon;
     string iconPath;
+    
+    
+    
     
 private:
     ofVec2f pos;
@@ -60,6 +67,9 @@ private:
     ofTrueTypeFont text;
     ofRectangle buttonRect;
     long timer;
+    
+    ButtonPulse pulse;
+    bool bPulse;
    
 
 };
