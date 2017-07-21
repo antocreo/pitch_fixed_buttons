@@ -56,7 +56,7 @@ void ofApp::setup() {
     
     //load winVideo
     winVideo.load("video/win.mov");
-    winVideo.setLoopState(OF_LOOP_NONE);
+//    winVideo.setLoopState(OF_LOOP_NONE);
 
     //load image from fail
     fail.load("images/fail.png");
@@ -200,18 +200,31 @@ void ofApp::draw() {
 //            ofDrawLine(0, ofGetHeight()/2, ofGetWidth(), ofGetHeight()/2);
 //            ofDrawLine(ofGetWidth()/2, 0, ofGetWidth()/2, ofGetHeight());
             
-            //drawing dots
+            //drawing DOTS
             
             float dotSize = 15 * 2;
             float dotDist = 5;
             float central  = (ofGetHeight() - (dotSize + dotDist) * realSequence.size())/2;
-           
+            
+            //translating just the dots
+            ofPushMatrix();
+            ofTranslate(0, -central - dotSize);
+            
+            //draw the empty ones
+            for (int i = 0; i<realSequence.size(); i++) {
+            ofPushStyle();
+            ofNoFill();
+            ofSetColor(255, 255, 255);
+            ofDrawCircle(ofGetWidth()/2, ofGetHeight() - (dotSize + dotDist) * i, dotSize/2 -2);
+            ofPopStyle();
+            }
+
+            //draw the pressed ones
             for (int i = 0; i<pressedSequence.size(); i++) {
 
-                ofPushMatrix();
-                ofTranslate(0, -central - dotSize);
                 if (pressedSequence[i] != realSequence[i]) {
                     ofPushStyle();
+                    ofFill();
                     ofSetColor(200, 0, 0);
                     ofDrawCircle(ofGetWidth()/2, ofGetHeight() - (dotSize + dotDist) * i, dotSize/2);
                     ofPopStyle();
@@ -219,15 +232,15 @@ void ofApp::draw() {
                 } else {
                     
                     ofPushStyle();
+                    ofFill();
                     ofSetColor(0, 200, 0);
                     ofDrawCircle(ofGetWidth()/2, ofGetHeight() - (dotSize + dotDist) * i, dotSize/2);
                     ofPopStyle();
                     
                 }
-                ofPopMatrix();
+                
             }
-            
-
+            ofPopMatrix(); //end translation of the dots
 
         }
        
@@ -541,6 +554,7 @@ void ofApp::emptySequence(){
         pressedSequence.clear();
         
         player[randomSequence[playerCounter]].stop();
+        winVideo.stop();
         bGameover = false;
         bWin = false;
         playAgainCounter = 0;
