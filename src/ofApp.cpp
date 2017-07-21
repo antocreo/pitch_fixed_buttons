@@ -33,6 +33,7 @@ void ofApp::setup() {
         player[i].load(dir.getPath(i), true);
     }
     
+
     
     bDebug = false;
     bGameover = false;
@@ -52,8 +53,13 @@ void ofApp::setup() {
     
     //saving the file
     log.setup("log");
-
     
+    //load winVideo
+    winVideo.load("video/win.mov");
+    winVideo.setLoopState(OF_LOOP_NONE);
+
+    //load image from fail
+    fail.load("images/fail.png");
 }
 
 //--------------------------------------------------------------
@@ -120,8 +126,18 @@ void ofApp::update() {
         } else !bWin;
     }
     
-   
-     
+    
+    //update the video
+    if (bGameover && !player[randomSequence[playerCounter]].isPlaying()) {
+        if (bWin) {
+            winVideo.play();
+            winVideo.update();
+        }
+    }
+    
+
+
+    
 }
 
 //--------------------------------------------------------------
@@ -175,10 +191,43 @@ void ofApp::draw() {
             //PLAY AGAIN
             ofPushStyle();
             if(!playAgain.getbActive()) {
-                playAgain.draw((ofGetWidth() - plAgW)/2, ofGetHeight() - plAgW - margin, plAgW, plAgW, "play_active.png");
-            } else     playAgain.draw((ofGetWidth() - plAgW)/2, ofGetHeight() - plAgW - margin, plAgW, plAgW, "play_active.png");
+                playAgain.draw((ofGetWidth() - plAgW)/2, ofGetHeight() - plAgW - margin, plAgW, plAgW, "play_standby.png");
+            } else     playAgain.draw((ofGetWidth() - plAgW)/2, ofGetHeight() - plAgW - margin, plAgW, plAgW, "play_standby.png");
             
             ofPopStyle();
+            
+            //just drawing lines to get the center.
+//            ofDrawLine(0, ofGetHeight()/2, ofGetWidth(), ofGetHeight()/2);
+//            ofDrawLine(ofGetWidth()/2, 0, ofGetWidth()/2, ofGetHeight());
+            
+            //drawing dots
+            
+            float dotSize = 15 * 2;
+            float dotDist = 5;
+            float central  = (ofGetHeight() - (dotSize + dotDist) * realSequence.size())/2;
+           
+            for (int i = 0; i<pressedSequence.size(); i++) {
+
+                ofPushMatrix();
+                ofTranslate(0, -central - dotSize);
+                if (pressedSequence[i] != realSequence[i]) {
+                    ofPushStyle();
+                    ofSetColor(200, 0, 0);
+                    ofDrawCircle(ofGetWidth()/2, ofGetHeight() - (dotSize + dotDist) * i, dotSize/2);
+                    ofPopStyle();
+
+                } else {
+                    
+                    ofPushStyle();
+                    ofSetColor(0, 200, 0);
+                    ofDrawCircle(ofGetWidth()/2, ofGetHeight() - (dotSize + dotDist) * i, dotSize/2);
+                    ofPopStyle();
+                    
+                }
+                ofPopMatrix();
+            }
+            
+
 
         }
        
@@ -190,18 +239,27 @@ void ofApp::draw() {
     if (bGameover && !player[randomSequence[playerCounter]].isPlaying()) {
         string message;
         if (bWin) {
-            message = "WIN";
+            ofPushStyle();
+            ofSetRectMode(OF_RECTMODE_CENTER);
+            ofEnableBlendMode(OF_BLENDMODE_MULTIPLY);
+            winVideo.draw(ofGetWidth()/2, ofGetHeight()/2, winVideo.getWidth(), winVideo.getHeight());
+            ofDisableBlendMode();
+            ofPopStyle();
         } else {
-            message = "TRY AGAIN";
+            ofPushStyle();
+            ofSetRectMode(OF_RECTMODE_CENTER);
+            fail.draw(ofGetWidth()/2, ofGetHeight()/2, fail.getWidth(), fail.getHeight());
+            ofPopStyle();
         }
-        ofTrueTypeFont winMessage;
-        winMessage.load("ArialBold.ttf", 100);
-        winMessage.drawString(message, (ofGetWidth() - winMessage.stringWidth(message))/2, (ofGetHeight()/2) );
-        winMessage.load("ArialBold.ttf", 20);
-        winMessage.drawString("press " + playKey, (ofGetWidth() - winMessage.stringWidth("press " + playKey ))/2, (ofGetHeight()/2 + 40) );
+//        ofTrueTypeFont winMessage;
+//        winMessage.load("ArialBold.ttf", 100);
+//        winMessage.drawString(message, (ofGetWidth() - winMessage.stringWidth(message))/2, (ofGetHeight()/2) );
+//        winMessage.load("ArialBold.ttf", 20);
+//        winMessage.drawString("press " + playKey, (ofGetWidth() - winMessage.stringWidth("press " + playKey ))/2, (ofGetHeight()/2 + 40) );
         
         
     }
+    
     
 }
 

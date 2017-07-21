@@ -86,7 +86,8 @@ public:
     char leftKey, rightKey, playAgainKey;
     string playKey;
     
-    ofImage bg;
+    ofImage bg, fail;
+    ofVideoPlayer winVideo;
     
     
 };
