@@ -3,7 +3,13 @@
 #include "ofMain.h"
 
 class ButtonPulse {
-	public:
+    
+ 	public:
+
+    ButtonPulse();
+    ~ButtonPulse(){}
+    
+
 		void setup();
 		void update(int speedModulo, ofSoundPlayer &player, float incrementVariation);
 		void draw(float x, float y);

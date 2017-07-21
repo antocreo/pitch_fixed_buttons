@@ -1,5 +1,8 @@
 #include "ButtonPulse.h"
 
+
+ButtonPulse::ButtonPulse(){};
+
 //--------------------------------------------------------------
 void ButtonPulse::setup(){
     
@@ -11,13 +14,6 @@ void ButtonPulse::setup(){
 //--------------------------------------------------------------
 void ButtonPulse::update(int speedModulo, ofSoundPlayer &player, float incrementVariation){
     
-//    if (ofGetFrameNum()%speedModulo == 0) {
-//        
-//        if (increment < incrementLimit) {
-//            increment+=incrementVariation;
-//        } else increment = 1;
-//       
-//    }
 
     
     if (ofGetFrameNum()%speedModulo == 0) {

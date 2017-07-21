@@ -12,6 +12,7 @@
 class Button {
 public:
     Button();
+    ~Button(){}
     void update(int speedModulo, ofSoundPlayer &player, float incrementVariation);
     void loadFont(string fontName, float size);
     void draw(float x, float y, float width, float height, string label);

@@ -5,6 +5,8 @@
 
 class WriteFile {
 public:
+    WriteFile();
+    ~WriteFile(){}
     void setup(string name);
     void update(string description, string data);
     void saveFile();

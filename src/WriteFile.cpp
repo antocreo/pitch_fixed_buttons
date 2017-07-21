@@ -1,5 +1,7 @@
 #include "WriteFile.h"
 
+WriteFile::WriteFile(){};
+
 //--------------------------------------------------------------
 void WriteFile::setup(string name){
     
