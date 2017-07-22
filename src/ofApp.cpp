@@ -28,7 +28,6 @@ void ofApp::setup() {
     //  //load all the files in the players
     dir.listDir("tones");
     for (int i = 0; i <(int) dir.size(); i++) {
-        
         player.push_back(*new ofSoundPlayer);
         player[i].load(dir.getPath(i), true);
     }
@@ -67,9 +66,9 @@ void ofApp::update() {
     
     ofSoundUpdate();
     //update buttons only for the animation pulse.
-    leftButt.update(1, player[randomSequence[pressedSequence.size()-1]], .2);
-    rightButt.update(1, player[randomSequence[pressedSequence.size()-1]], .2);
-    playSeq.update(1, player[randomSequence[playerCounter]], .2);
+    leftButt.update(1, player[randomSequence[pressedSequence.size()-1]], 1);
+    rightButt.update(1, player[randomSequence[pressedSequence.size()-1]], 1);
+    playSeq.update(1, player[randomSequence[playerCounter]], 1);
     
     //PLAY BUTTON
     //check the button is toggled and that the players and the sequence is filled
@@ -619,7 +618,6 @@ void ofApp::checkPushedButton (Button first, Button second){
         }
     }
 }
-
 
 
 //--------------------------------------------------------------
