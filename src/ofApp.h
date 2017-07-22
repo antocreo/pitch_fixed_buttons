@@ -62,6 +62,7 @@ public:
     
     ofDirectory dir;
     vector <string> folderName;
+    vector <string> iconName;
         
     bool bFlagNote;
     bool bGameover, bWin;
@@ -87,6 +88,9 @@ public:
     
     ofImage bg, fail;
     ofVideoPlayer winVideo;
+    
+    int randFold;
+
     
     
 };

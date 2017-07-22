@@ -17,7 +17,12 @@ void ofApp::setup() {
     //I am populating the string vector with the paths of the folders in the main "tones" folder
     for (int i = 0; i <(int) dir.size(); i++) {
         folderName.push_back(dir.getPath(i));
-        cout << folderName[i]<<endl;
+//        cout << folderName[i]<<endl;
+        
+        //moving in this vector just the names of the instruments
+        iconName.push_back(folderName[i]);
+        iconName[i].erase(0,6);
+//        cout << iconName[i] <<endl;
     }
 
     //loading the notes of the chosen instrument
@@ -138,7 +143,11 @@ void ofApp::draw() {
             //PLAY
             if(!playSeq.getbActive()) {
                 playSeq.draw(playX, playY, playW, playW, "play_standby.png");
-            } else playSeq.draw(playX, playY, playW, playW, "play_active.png");
+            } else{
+                playSeq.draw(playX, playY, playW, playW, iconName[randFold] + ".png");
+            }
+            
+           
             
             ofPopStyle();
         }
@@ -584,9 +593,9 @@ void ofApp::drawDebug(bool b){
         if (playerCounter>0) {
             ofDrawBitmapString("is playing? " + ofToString(player[randomSequence[playerCounter]].isPlaying()), 20, 180);
         }
-        ofDrawBitmapString("upBut + downBut " + ofToString(rightButt.getbPitch()) + " " + ofToString(leftButt.getbPitch()), 20, 200);
+        ofDrawBitmapString("INSTRUMENT " + ofToString(folderName[randFold]) + " " + ofToString(leftButt.getbPitch()), 20, 200);
         ofDrawBitmapString("DIFFICULTY " + ofToString(difficulty()), 670, 20);
-        
+       
         
         for (int i = 0; i < realSequence.size(); i++) {
             ofDrawBitmapString("realSeq " + ofToString(realSequence[i]), 320, 20 + 20*i);
@@ -619,7 +628,9 @@ void ofApp::saveLog(){
     //update and write file
     log.update("Game num: ", ofToString(gameCounter));
     log.update("Sequence of: ", ofToString(counter));
+    log.update("Instrument ", folderName[randFold]);
     log.update("Difficulty: ", ofToString(difficulty()));
+    log.update("Num Max Notes", ofToString(realSequence.size()));
     log.update("Repeated num of time: ", ofToString(playAgainCounter));
     
     
@@ -770,7 +781,7 @@ void ofApp::resetPulse(){
 void ofApp::loadInstrument(){
     
     //create random number
-    int randFold = (int)ofRandom(0,4);
+    randFold = (int)ofRandom(0,4);
     
     //create temp directory object
     ofDirectory chosenDir;
@@ -782,7 +793,6 @@ void ofApp::loadInstrument(){
         player.push_back(*new ofSoundPlayer);
         player[i].load(chosenDir.getPath(i), true);
     }
-
 
 }
 
