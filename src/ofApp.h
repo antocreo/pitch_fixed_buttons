@@ -54,9 +54,6 @@ public:
     Button playSeq;
     Button playAgain;
     
-    double pitch;
-    float pressureK;
-    
     //array containing
     int noteIndex[NUM_TONES];
     int previousNote;   //previously played note
@@ -79,7 +76,6 @@ public:
     
     int counter, playerCounter, playAgainCounter, gameCounter;
     string path;
-    string leftButtLabel, rightButtLabel;
     
     WriteFile log;
     ofXml settings;

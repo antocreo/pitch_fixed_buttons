@@ -7,23 +7,8 @@ void ofApp::setup() {
     ofBackground(200);
     ofEnableBlendMode(OF_BLENDMODE_ALPHA);
     ofSetBackgroundAuto(true);
-
+    
     bg.load("images/bg.png");
-    
-    //loading buttons
-    leftButt.loadFont("ArialBold.ttf", 20);
-    rightButt.loadFont("ArialBold.ttf", 20);
-    playSeq.loadFont("ArialBold.ttf", 20);
-    playAgain.loadFont("ArialBold.ttf", 20);
-    
-    //setting colors standby for the buttons
-    leftButt.setButtColor(150, 30, 10, 100);
-    rightButt.setButtColor(150, 30, 10, 100);
-    playAgain.setButtColor(150, 30, 10, 100);
-    
-    //setting labels
-    leftButtLabel = "DOWN";
-    rightButtLabel = "UP";
     
     //  //load all the files in the players
     dir.listDir("tones");
@@ -32,7 +17,8 @@ void ofApp::setup() {
         player[i].load(dir.getPath(i), true);
     }
     
-
+    //
+    //  some booleans
     
     bDebug = false;
     bGameover = false;
@@ -55,8 +41,8 @@ void ofApp::setup() {
     
     //load winVideo
     winVideo.load("video/win.mov");
-//    winVideo.setLoopState(OF_LOOP_NONE);
-
+    //    winVideo.setLoopState(OF_LOOP_NONE);
+    
     //load image from fail
     fail.load("images/fail.png");
 }
@@ -87,10 +73,6 @@ void ofApp::update() {
     //when the sequence has finished just RESET
     if (playerCounter == counter - 1 && !player[randomSequence[playerCounter]].isPlaying()) {
         bButtonsActive = true; //activate L & R buttons
-        leftButt.setButtColor(150, 30, 10);
-        rightButt.setButtColor(150, 30, 10);
-        playAgain.setButtColor(150, 30, 10);
-        
     }
     
     
@@ -101,13 +83,6 @@ void ofApp::update() {
     //deactivate the buttons again if you press x counter times.
     if (pressedSequence.size() >= realSequence.size() && !player[randomSequence[playerCounter]].isPlaying()) {
         bButtonsActive = false;
-    }
-    
-    if (!bButtonsActive) {
-        //setting colors standby for the buttons
-        leftButt.setButtColor(150, 30, 10, 100);
-        rightButt.setButtColor(150, 30, 10, 100);
-        playAgain.setButtColor(150, 30, 10, 100);
     }
     
     //WIN OR LOSE
@@ -134,21 +109,16 @@ void ofApp::update() {
         }
     }
     
-
-
+    
+    
     
 }
 
 //--------------------------------------------------------------
 void ofApp::draw() {
-
-
+    
+    
     bg.draw(0, 0, ofGetWidth(), ofGetHeight());
-    
-//    ofDrawBitmapString(ofToString(bPulse), 10, 10);
-//    ofDrawBitmapString(ofToString(pressedSequence.size()-1), 10, 20);
-//    
-    
     
     float playW = 400;
     float plAgW = playW/2;
@@ -167,11 +137,11 @@ void ofApp::draw() {
             
             ofPopStyle();
         }
-       
-
+        
+        
         if (bButtonsActive) {
             //draw buttons
-
+            
             //LEFT/DOWN
             ofPushStyle();
             if(!leftButt.getbActive()) {
@@ -186,18 +156,18 @@ void ofApp::draw() {
             } else  rightButt.draw(ofGetWidth() - margin - playW, playY, playW, playW, "up_active.png");
             
             ofPopStyle();
-
+            
             //PLAY AGAIN
             ofPushStyle();
             if(!playAgain.getbActive()) {
-                playAgain.draw((ofGetWidth() - plAgW)/2, ofGetHeight() - plAgW - margin, plAgW, plAgW, "play_standby.png");
-            } else     playAgain.draw((ofGetWidth() - plAgW)/2, ofGetHeight() - plAgW - margin, plAgW, plAgW, "play_standby.png");
+                playAgain.draw((ofGetWidth() - plAgW)/2, ofGetHeight() - plAgW - margin, plAgW, plAgW, "play_again.png");
+            } else     playAgain.draw((ofGetWidth() - plAgW)/2, ofGetHeight() - plAgW - margin, plAgW, plAgW, "play_again.png");
             
             ofPopStyle();
             
             //just drawing lines to get the center.
-//            ofDrawLine(0, ofGetHeight()/2, ofGetWidth(), ofGetHeight()/2);
-//            ofDrawLine(ofGetWidth()/2, 0, ofGetWidth()/2, ofGetHeight());
+            //            ofDrawLine(0, ofGetHeight()/2, ofGetWidth(), ofGetHeight()/2);
+            //            ofDrawLine(ofGetWidth()/2, 0, ofGetWidth()/2, ofGetHeight());
             
             //drawing DOTS
             
@@ -211,23 +181,23 @@ void ofApp::draw() {
             
             //draw the empty ones
             for (int i = 0; i<realSequence.size(); i++) {
-            ofPushStyle();
-            ofNoFill();
-            ofSetColor(255, 255, 255);
-            ofDrawCircle(ofGetWidth()/2, ofGetHeight() - (dotSize + dotDist) * i, dotSize/2 -2);
-            ofPopStyle();
+                ofPushStyle();
+                ofNoFill();
+                ofSetColor(255, 255, 255);
+                ofDrawCircle(ofGetWidth()/2, ofGetHeight() - (dotSize + dotDist) * i, dotSize/2 -2);
+                ofPopStyle();
             }
-
+            
             //draw the pressed ones
             for (int i = 0; i<pressedSequence.size(); i++) {
-
+                
                 if (pressedSequence[i] != realSequence[i]) {
                     ofPushStyle();
                     ofFill();
                     ofSetColor(200, 0, 0);
                     ofDrawCircle(ofGetWidth()/2, ofGetHeight() - (dotSize + dotDist) * i, dotSize/2);
                     ofPopStyle();
-
+                    
                 } else {
                     
                     ofPushStyle();
@@ -240,9 +210,9 @@ void ofApp::draw() {
                 
             }
             ofPopMatrix(); //end translation of the dots
-
+            
         }
-       
+        
     }
     
     //drawing debug overlayed //leave it at the bottom
@@ -263,12 +233,6 @@ void ofApp::draw() {
             fail.draw(ofGetWidth()/2, ofGetHeight()/2, fail.getWidth(), fail.getHeight());
             ofPopStyle();
         }
-//        ofTrueTypeFont winMessage;
-//        winMessage.load("ArialBold.ttf", 100);
-//        winMessage.drawString(message, (ofGetWidth() - winMessage.stringWidth(message))/2, (ofGetHeight()/2) );
-//        winMessage.load("ArialBold.ttf", 20);
-//        winMessage.drawString("press " + playKey, (ofGetWidth() - winMessage.stringWidth("press " + playKey ))/2, (ofGetHeight()/2 + 40) );
-        
         
     }
     
@@ -283,7 +247,7 @@ void ofApp::keyPressed(int key) {
         if (bButtonsActive) {
             leftButt.setbActive(true);
             resetPulse();
-
+            
         }
     }
     
@@ -291,7 +255,7 @@ void ofApp::keyPressed(int key) {
         if (bButtonsActive) {
             rightButt.setbActive(true);
             resetPulse();
-
+            
         }
     }
     
@@ -315,41 +279,12 @@ void ofApp::keyReleased(int key) {
     
     
     if (key == leftKey) {
-   
-       /* 
-        if (bButtonsActive) {
-            
-            leftButt.setbActive(false);
-            
-            //control the sequence insertion
-            leftButt.setbPitch(false);
-
-            pressedSequence.push_back(leftButt.getbPitch());
-            player[randomSequence[pressedSequence.size()-1]].play();
-            
-        }
-        */
-        activateButton(leftButt, false);
         
-
+        activateButton(leftButt, false);
     }
     
     if (key == rightKey) {
-        /*
-        if (bButtonsActive) {
-            
-            rightButt.setbActive(false);
-            
-            //control the sequence insertion
-            rightButt.setbPitch(true);
-
-            pressedSequence.push_back(rightButt.getbPitch());
-            player[randomSequence[pressedSequence.size()-1]].play();
-            
-        }
-        */
         activateButton(rightButt, true);
-        
     }
     
     //play button is a toggle
@@ -402,7 +337,7 @@ void ofApp::mousePressed(int x, int y, int button) {
         }
         
     }
-
+    
     
     //PLAY AGAIN BUTTON
     if (playAgain.getRectangle().inside(x, y)) {
@@ -410,7 +345,7 @@ void ofApp::mousePressed(int x, int y, int button) {
             playAgain.setbActive(!playAgain.getbActive());
             resetPulse();
         }
-
+        
     }
     
 }
@@ -497,7 +432,7 @@ void ofApp::loadSequence(){
             }
         }
     }
- 
+    
     // adjust the first dude THE CORRECT SEQUENCE OF BOOLEANS
     if (randomSequence.size() > 0 && randomSequence.size() == counter) {
         
@@ -505,7 +440,7 @@ void ofApp::loadSequence(){
             realSequence[0] = false;
         }
     }
-
+    
     
     //CHECKING AND LOADING
     
@@ -588,7 +523,7 @@ void ofApp::togglePlay(){
             if (playerCounter < counter - 1){
                 player[randomSequence[playerCounter]].play();
                 playSeq.setbPulse(true);
-
+                
             }
         }
         
@@ -744,19 +679,19 @@ float ofApp::difficulty(){
 
 
 void ofApp::activateButton(Button &b, bool val){
-
+    
     if (bButtonsActive) {
         
         b.setbActive(false);
-    
+        
         //control the sequence insertion
         b.setbPitch(val);
-
+        
         if (pressedSequence.size() < realSequence.size()) {
             pressedSequence.push_back(b.getbPitch());
             player[randomSequence[pressedSequence.size()-1]].play();
         }
-       
+        
         if (pressedSequence[pressedSequence.size()-1] == realSequence[pressedSequence.size()-1]) {
             b.setbPulse(true);
         } else {
@@ -764,12 +699,12 @@ void ofApp::activateButton(Button &b, bool val){
         }
     }
     
-   }
+}
 
 //--------------------------------------------------------------
 
 void ofApp::setupXML(){
-
+    
     //XML settings
     //load the xml
     settings.load("settings.xml");
@@ -809,11 +744,11 @@ void ofApp::setupXML(){
     } else {
         playAgainKey = 'r';
     }
-
+    
 }
 
 void ofApp::resetPulse(){
-
+    
     leftButt.setbPulse(false);
     leftButt.getButtonPulse()->increment = 0;
     rightButt.setbPulse(false);
