@@ -48,6 +48,8 @@ public:
     void drawPulse(float, float, int);
     
     void resetPulse();
+    void loadInstrument();
+    
     
     Button leftButt;
     Button  rightButt;
@@ -59,6 +61,7 @@ public:
     int previousNote;   //previously played note
     
     ofDirectory dir;
+    vector <string> folderName;
         
     bool bFlagNote;
     bool bGameover, bWin;

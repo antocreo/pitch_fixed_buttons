@@ -12,12 +12,17 @@ void ofApp::setup() {
     
     //  //load all the files in the players
     dir.listDir("tones");
-    for (int i = 0; i <(int) dir.size(); i++) {
-        player.push_back(*new ofSoundPlayer);
-        player[i].load(dir.getPath(i), true);
-    }
     
-    //
+  
+    //I am populating the string vector with the paths of the folders in the main "tones" folder
+    for (int i = 0; i <(int) dir.size(); i++) {
+        folderName.push_back(dir.getPath(i));
+        cout << folderName[i]<<endl;
+    }
+
+    //loading the notes of the chosen instrument
+    loadInstrument();
+    
     //  some booleans
     
     bDebug = false;
@@ -498,6 +503,8 @@ void ofApp::emptySequence(){
         rightButt.setbPulse(false);
         playSeq.setbPulse(false);
         
+        loadInstrument();
+        
     }
     
     playerCounter = 0;
@@ -747,6 +754,8 @@ void ofApp::setupXML(){
     
 }
 
+//--------------------------------------------------------------
+
 void ofApp::resetPulse(){
     
     leftButt.setbPulse(false);
@@ -754,6 +763,26 @@ void ofApp::resetPulse(){
     rightButt.setbPulse(false);
     rightButt.getButtonPulse()->increment = 0;
     playSeq.setbPulse(false);
+  
+}
+//--------------------------------------------------------------
+
+void ofApp::loadInstrument(){
     
+    //create random number
+    int randFold = (int)ofRandom(0,4);
+    
+    //create temp directory object
+    ofDirectory chosenDir;
+    //list the files in the chosen directory (randomFolder)
+    chosenDir.listDir(folderName[randFold]);
+    
+    //load the players
+    for (int i = 0; i <(int) chosenDir.size(); i++) {
+        player.push_back(*new ofSoundPlayer);
+        player[i].load(chosenDir.getPath(i), true);
+    }
+
+
 }
 
