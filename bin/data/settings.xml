@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <settings>
-<sequence>3</sequence>
+<sequence>2</sequence>
 <leftButton>1</leftButton>
 <rightButton>2</rightButton>
 <playButton>3</playButton>

@@ -138,7 +138,7 @@ void ofApp::draw() {
     
     if (!bGameover){
         
-        if (!bButtonsActive && pressedSequence.size() == 0) {
+        if (!bButtonsActive && pressedSequence.size() == 1) {
             ofPushStyle();
             //PLAY
             if(!playSeq.getbActive()) {
@@ -146,9 +146,7 @@ void ofApp::draw() {
             } else{
                 playSeq.draw(playX, playY, playW, playW, iconName[randFold] + ".png");
             }
-            
-           
-            
+     
             ofPopStyle();
         }
         
@@ -180,36 +178,36 @@ void ofApp::draw() {
             ofPopStyle();
             
             //just drawing lines to get the center.
-            //            ofDrawLine(0, ofGetHeight()/2, ofGetWidth(), ofGetHeight()/2);
-            //            ofDrawLine(ofGetWidth()/2, 0, ofGetWidth()/2, ofGetHeight());
+//                        ofDrawLine(0, ofGetHeight()/2, ofGetWidth(), ofGetHeight()/2);
+//                        ofDrawLine(ofGetWidth()/2, 0, ofGetWidth()/2, ofGetHeight());
             
             //drawing DOTS
             
-            float dotSize = 15 * 2;
+            float dotSize = 20 * 2; //diameter
             float dotDist = 5;
-            float central  = (ofGetHeight() - (dotSize + dotDist) * realSequence.size())/2;
+            float central  = (ofGetWidth() - (dotSize + dotDist) * realSequence.size()-1)/2;
             
             //translating just the dots
             ofPushMatrix();
-            ofTranslate(0, -central - dotSize);
+            ofTranslate( central, dotSize/2 + margin);
             
             //draw the empty ones
-            for (int i = 0; i<realSequence.size(); i++) {
+            for (int i = 1; i<realSequence.size(); i++) {
                 ofPushStyle();
                 ofNoFill();
                 ofSetColor(255, 255, 255);
-                ofDrawCircle(ofGetWidth()/2, ofGetHeight() - (dotSize + dotDist) * i, dotSize/2 -2);
+                ofDrawCircle((dotSize + dotDist) * i, 0 , dotSize/2 -2);
                 ofPopStyle();
             }
             
             //draw the pressed ones
-            for (int i = 0; i<pressedSequence.size(); i++) {
+            for (int i = 1; i<pressedSequence.size(); i++) {
                 
                 if (pressedSequence[i] != realSequence[i]) {
                     ofPushStyle();
                     ofFill();
                     ofSetColor(200, 0, 0);
-                    ofDrawCircle(ofGetWidth()/2, ofGetHeight() - (dotSize + dotDist) * i, dotSize/2);
+                    ofDrawCircle((dotSize + dotDist) * i, 0, dotSize/2);
                     ofPopStyle();
                     
                 } else {
@@ -217,7 +215,7 @@ void ofApp::draw() {
                     ofPushStyle();
                     ofFill();
                     ofSetColor(0, 200, 0);
-                    ofDrawCircle(ofGetWidth()/2, ofGetHeight() - (dotSize + dotDist) * i, dotSize/2);
+                    ofDrawCircle((dotSize + dotDist) * i, 0, dotSize/2);
                     ofPopStyle();
                     
                 }
@@ -421,8 +419,10 @@ void ofApp::loadSequence(){
             if (randomSequence.empty()) {
                 //push this number in the vector
                 randomSequence.push_back(randNote);
-                //push true in the real sequence. the first number will be always 1
+                //push true in the real sequence and pressed sequence. the first number will be always 1
+                //we made the first move null so that they can play with the direction of the pitch
                 realSequence.push_back(true);
+                pressedSequence.push_back(true);
             } else {
                 //check new number is different from last one
                 if (randNote != randomSequence[randomSequence.size()-1]) {
@@ -448,12 +448,12 @@ void ofApp::loadSequence(){
     }
     
     // adjust the first dude THE CORRECT SEQUENCE OF BOOLEANS
-    if (randomSequence.size() > 0 && randomSequence.size() == counter) {
-        
-        if (randomSequence[1] > randomSequence[0]) {
-            realSequence[0] = false;
-        }
-    }
+//    if (randomSequence.size() > 0 && randomSequence.size() == counter) {
+//        
+//        if (randomSequence[1] > randomSequence[0]) {
+//            realSequence[0] = false;
+//        }
+//    }
     
     
     //CHECKING AND LOADING
@@ -787,6 +787,10 @@ void ofApp::loadInstrument(){
     ofDirectory chosenDir;
     //list the files in the chosen directory (randomFolder)
     chosenDir.listDir(folderName[randFold]);
+    
+//    if (folderName[randFold] == "tones/voice") {
+//        counter = 2;
+//    }
     
     //load the players
     for (int i = 0; i <(int) chosenDir.size(); i++) {
