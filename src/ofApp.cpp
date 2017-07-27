@@ -52,6 +52,7 @@ void ofApp::setup() {
     
     //load winVideo
     winVideo.load("video/win.mov");
+    winVideo.setVolume(.4);
     //    winVideo.setLoopState(OF_LOOP_NONE);
     
     //load image from fail
@@ -129,9 +130,6 @@ void ofApp::update() {
             winVideo.update();
         }
     }
-    
-    
-    
     
 }
 
