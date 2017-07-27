@@ -74,7 +74,7 @@ void ofApp::update() {
             playSequence();
             playSeq.setbPulse(true);
         }
-        else if (bLoadSeq && !playSeq.getbActive()) {
+        else if (bLoadSeq && !playSeq.getbActive() && !bButtonsActive) {
             emptySequence();
             playSeq.setbPulse(false);
         }
@@ -138,6 +138,8 @@ void ofApp::draw() {
     
     if (!bGameover){
         
+        
+        //initial state //showing just the play button
         if (!bButtonsActive && (pressedSequence.size() == 1 || pressedSequence.size() == 0) ) {
             ofPushStyle();
             //PLAY
@@ -169,13 +171,19 @@ void ofApp::draw() {
             
             ofPopStyle();
             
-            //PLAY AGAIN
+            //PLAY -- REPEAT
             ofPushStyle();
-            if(!playAgain.getbActive()) {
-                playAgain.draw((ofGetWidth() - plAgW)/2, ofGetHeight() - plAgW - margin, plAgW, plAgW, "play_again.png");
-            } else     playAgain.draw((ofGetWidth() - plAgW)/2, ofGetHeight() - plAgW - margin, plAgW, plAgW, "play_again.png");
+            if(!playSeq.getbActive()) {
+                playSeq.draw((ofGetWidth() - plAgW)/2, ofGetHeight() - plAgW - margin, plAgW, plAgW, "play_again.png");
+            } else     playSeq.draw((ofGetWidth() - plAgW)/2, ofGetHeight() - plAgW - margin, plAgW, plAgW, "play_again.png");
             
             ofPopStyle();
+            
+            
+            //TODO - IMPLEMENT SKIP
+            
+            
+            
             
             //just drawing lines to get the center.
 //                        ofDrawLine(0, ofGetHeight()/2, ofGetWidth(), ofGetHeight()/2);
@@ -254,7 +262,7 @@ void ofApp::draw() {
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key) {
     
-    
+    //LEFT BUTTON
     if (key == leftKey){
         if (bButtonsActive) {
             leftButt.setbActive(true);
@@ -263,6 +271,7 @@ void ofApp::keyPressed(int key) {
         }
     }
     
+    //RIGHT BUTTON
     if (key == rightKey) {
         if (bButtonsActive) {
             rightButt.setbActive(true);
@@ -271,12 +280,18 @@ void ofApp::keyPressed(int key) {
         }
     }
     
-    if (key == ofToChar(playKey)) {
-        
+    //PLAY --- REPEAT
+    if (!bButtonsActive && key == ofToChar(playKey)) {
         resetPulse();
-        
+        }
+    
+    
+    if (bButtonsActive && key == ofToChar(playKey) ) {
+        playSeq.setbActive(!playSeq.getbActive());
     }
     
+    
+    //SKIP ---  TODO
     if (key == playAgainKey) {
         if (bButtonsActive) {
             playAgain.setbActive(!playAgain.getbActive());
@@ -289,22 +304,37 @@ void ofApp::keyPressed(int key) {
 //--------------------------------------------------------------
 void ofApp::keyReleased(int key) {
     
-    
+    //LEFT BUTTON
     if (key == leftKey) {
         
         activateButton(leftButt, false);
     }
     
+    
+    //RIGHT BUTTON
     if (key == rightKey) {
         activateButton(rightButt, true);
     }
     
+    
+    //PLAY --- REPEAT
     //play button is a toggle
     if (!bButtonsActive && key == ofToChar(playKey) ) {
         togglePlay();
     }
     
-    if (key == playAgainKey) {
+    //IMPLEMENTING PLAY AGAIN WITH PLAY BUTTON
+    if (bButtonsActive && key == ofToChar(playKey) ) {
+            playSeq.setbActive(!playSeq.getbActive());
+            playAgainCounter++; // for log stats
+            playerCounter = 0;
+            player[randomSequence[playerCounter]].play();
+        
+    }
+    
+    
+    //SKIP BUTTON
+     if (key == playAgainKey) {
         if (bButtonsActive) {
             playAgain.setbActive(!playAgain.getbActive());
             playAgainCounter++; // for log stats
@@ -313,9 +343,8 @@ void ofApp::keyReleased(int key) {
         }
     }
     
-    
-    
-    
+
+    //debug
     if (key == 'd') {
         bDebug = !bDebug;
     }
@@ -341,23 +370,25 @@ void ofApp::mousePressed(int x, int y, int button) {
         }
     }
     
-    //PLAY BUTTON
-    if (playSeq.getRectangle().inside(x, y)) {
-        if (bButtonsActive) {
-            playSeq.setbActive(!playSeq.getbActive());
-            resetPulse();
-        }
-        
+    
+    //PLAY --- REPEAT
+    if (!bButtonsActive && playSeq.getRectangle().inside(x, y)) {
+        resetPulse();
     }
     
     
-    //PLAY AGAIN BUTTON
+    if (bButtonsActive && playSeq.getRectangle().inside(x, y) ) {
+        playSeq.setbActive(!playSeq.getbActive());
+    }
+
+    
+    
+    //SKIP BUTTON
     if (playAgain.getRectangle().inside(x, y)) {
         if (bButtonsActive) {
             playAgain.setbActive(!playAgain.getbActive());
             resetPulse();
         }
-        
     }
     
 }
@@ -376,13 +407,24 @@ void ofApp::mouseReleased(int x, int y, int button){
     }
     
     
-    //PLAY BUTTON
-    if (!bButtonsActive && playSeq.getRectangle().inside(x, y)) {
+    //PLAY -- REPEAT
+        //play button is a toggle
+    if (!bButtonsActive && playSeq.getRectangle().inside(x, y) ) {
         togglePlay();
     }
     
+    //IMPLEMENTING PLAY AGAIN WITH PLAY BUTTON
+    if (bButtonsActive && playSeq.getRectangle().inside(x, y) ) {
+        playSeq.setbActive(!playSeq.getbActive());
+        playAgainCounter++; // for log stats
+        playerCounter = 0;
+        player[randomSequence[playerCounter]].play();
+        
+    }
+
     
-    //PLAY AGAIN BUTTON
+    
+    //SKIP BUTTON
     if (playAgain.getRectangle().inside(x, y)) {
         if (bButtonsActive) {
             playAgain.setbActive(!playAgain.getbActive());
@@ -551,6 +593,7 @@ void ofApp::togglePlay(){
     }
 }
 
+/*
 //--------------------------------------------------------------
 
 void ofApp::checkPushedButton (Button first, Button second){
@@ -569,7 +612,7 @@ void ofApp::checkPushedButton (Button first, Button second){
         }
     }
 }
-
+*/
 
 //--------------------------------------------------------------
 
@@ -717,6 +760,9 @@ void ofApp::activateButton(Button &b, bool val){
         }
     }
     
+    //here I avoid the play button to pulse
+    playSeq.setbPulse(false);
+    
 }
 
 //--------------------------------------------------------------
@@ -774,6 +820,8 @@ void ofApp::resetPulse(){
     rightButt.setbPulse(false);
     rightButt.getButtonPulse()->increment = 0;
     playSeq.setbPulse(false);
+    playSeq.getButtonPulse()->increment = 0;
+
   
 }
 //--------------------------------------------------------------
