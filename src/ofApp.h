@@ -72,7 +72,7 @@ public:
     bool bLoadSeq;
     bool bDebug;
     bool bIncreasingDifficulty;
-
+    bool bFirstNote;
 
     vector <ofSoundPlayer> player;
     vector<int>randomSequence;

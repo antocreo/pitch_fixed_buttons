@@ -36,6 +36,7 @@ void ofApp::setup() {
     bPlaySeq = false;
     bButtonsActive = false; //let's start with left and right buttons not active
     bLoadSeq = false;
+    bFirstNote = false;
     
     setupXML();
     
@@ -80,17 +81,22 @@ void ofApp::update() {
         }
     }
     
-    
+
     //when the sequence has finished just DISPLAY THE BUTTONS
     if (playerCounter == counter - 1 && !player[randomSequence[playerCounter]].isPlaying()) {
+        
         bButtonsActive = true; //activate L & R buttons
     }
     
-//    //just playing the first note
-//    if (bButtonsActive && pressedSequence.size() == 0) {
-//        player[randomSequence[0]].play();
-//    }
     
+    //just playing the first note
+    if (bButtonsActive && pressedSequence.size() == 1 && bFirstNote == false ) {
+        ofSleepMillis(1000);
+        player[randomSequence[0]].play();
+        bFirstNote = true;
+        
+        
+    }
     
     //UP AND DOWN BUTTON
     //let's start with the game
@@ -198,14 +204,15 @@ void ofApp::draw() {
             
             float dotSize = 20 * 2; //diameter
             float dotDist = 5;
-            float central  = (ofGetWidth() - (dotSize + dotDist) * realSequence.size()-1)/2;
+            float central  = (ofGetWidth() - (dotSize + dotDist) * (realSequence.size()-1))/2;
             
             //translating just the dots
             ofPushMatrix();
             ofTranslate( central, dotSize/2 + margin);
             
             //draw the empty ones
-            for (int i = 1; i<realSequence.size(); i++) {
+            for (int i = 0; i<realSequence.size(); i++) {
+             
                 ofPushStyle();
                 ofNoFill();
                 ofSetColor(255, 255, 255);
@@ -214,8 +221,8 @@ void ofApp::draw() {
             }
             
             //draw the pressed ones
-            for (int i = 1; i<pressedSequence.size(); i++) {
-                
+            for (int i = 0; i<pressedSequence.size(); i++) {
+                          
                 if (pressedSequence[i] != realSequence[i]) {
                     ofPushStyle();
                     ofFill();
@@ -461,8 +468,7 @@ void ofApp::loadSequence(){
         bButtonsActive = false;
     }
   
-
-        
+    
         //CREATE THE RANDOM SEQUENCE
         //creates a vector of "counter" size with random number. there are not equal adjacent numbers
         //iterate for num of notes in the sequence
@@ -530,7 +536,10 @@ void ofApp::loadSequence(){
         
     } else loadSequence();
     
-    
+    //setting bWing here to so that I can control the "repeat same sequence if fail" (n.b. commented in empty sequence where it was before)
+    bWin = false;
+
+
 }
 
 //--------------------------------------------------------------
@@ -545,6 +554,7 @@ void ofApp::playSequence(){
             player[randomSequence[playerCounter]].play();
         }
     }
+    
 }
 
 
@@ -554,8 +564,13 @@ void ofApp::emptySequence(){
     
     //comment this if block if you don't want to get the increasing level of difficulty
     //or just deacrivate via XML settings
+    
     if (bWin && bIncreasingDifficulty ) {
-        counter++;
+//        if (counter <= 3) {
+            counter++;
+//        } else if (counter >3 && counter % counter==1){
+//            counter++;
+//        }
     }
     // end of level difficulty
     
@@ -571,7 +586,7 @@ void ofApp::emptySequence(){
         player[randomSequence[playerCounter]].stop();
         winVideo.stop();
         bGameover = false;
-        bWin = false;
+//        bWin = false;
         playAgainCounter = 0;
         
         //reset the pulse on the buttons
@@ -584,6 +599,8 @@ void ofApp::emptySequence(){
     }
     
     playerCounter = 0;
+    bFirstNote = false;
+
     
 }
 
