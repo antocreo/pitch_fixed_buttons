@@ -138,7 +138,7 @@ void ofApp::draw() {
     
     if (!bGameover){
         
-        if (!bButtonsActive && pressedSequence.size() == 1) {
+        if (!bButtonsActive && (pressedSequence.size() == 1 || pressedSequence.size() == 0) ) {
             ofPushStyle();
             //PLAY
             if(!playSeq.getbActive()) {
