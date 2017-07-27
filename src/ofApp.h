@@ -57,6 +57,7 @@ public:
     Button playAgain;
     
     //array containing
+    int randNote;
     int noteIndex[NUM_TONES];
     int previousNote;   //previously played note
     
@@ -75,6 +76,7 @@ public:
 
     vector <ofSoundPlayer> player;
     vector<int>randomSequence;
+    vector<int>previousSequence;
     vector<bool>pressedSequence; //this is the sequence storing the bools of the pressed buttons
     vector<bool>realSequence;    //this stores the bools of the real sequence to compare with pressedSequence
     

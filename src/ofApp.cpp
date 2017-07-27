@@ -68,27 +68,32 @@ void ofApp::update() {
     
     //PLAY BUTTON
     //check the button is toggled and that the players and the sequence is filled
-    //when the sequence has finished just reset
     if (playSeq.getbActive()) {
         if (bLoadSeq && !player[randomSequence[playerCounter]].isPlaying()){
             playSequence();
             playSeq.setbPulse(true);
         }
+        //when the sequence has finished just reset
         else if (bLoadSeq && !playSeq.getbActive() && !bButtonsActive) {
             emptySequence();
             playSeq.setbPulse(false);
         }
     }
     
-    //when the sequence has finished just RESET
+    
+    //when the sequence has finished just DISPLAY THE BUTTONS
     if (playerCounter == counter - 1 && !player[randomSequence[playerCounter]].isPlaying()) {
         bButtonsActive = true; //activate L & R buttons
     }
     
+//    //just playing the first note
+//    if (bButtonsActive && pressedSequence.size() == 0) {
+//        player[randomSequence[0]].play();
+//    }
+    
     
     //UP AND DOWN BUTTON
     //let's start with the game
-    //let's check the first button pressed (pressedSeq is empty) and assign the first value as true (like in the realSequence)
     
     //deactivate the buttons again if you press x counter times.
     if (pressedSequence.size() >= realSequence.size() && !player[randomSequence[playerCounter]].isPlaying()) {
@@ -238,6 +243,8 @@ void ofApp::draw() {
     //drawing debug overlayed //leave it at the bottom
     drawDebug(bDebug);
     
+    
+    //DRAWING THE WIN OR LOSE MESSAGE
     if (bGameover && !player[randomSequence[playerCounter]].isPlaying()) {
         string message;
         if (bWin) {
@@ -391,6 +398,14 @@ void ofApp::mousePressed(int x, int y, int button) {
         }
     }
     
+
+    //END oF GAME
+    //just retoggling to the main page when the game finishes (either win or lose)
+    if (bGameover && ofGetMousePressed()){
+      
+        togglePlay();
+    }
+    
 }
 
 //--------------------------------------------------------------
@@ -445,51 +460,59 @@ void ofApp::loadSequence(){
     if (bButtonsActive) {
         bButtonsActive = false;
     }
-    
-    //CREATE THE RANDOM SEQUENCE
-    //creates a vector of "counter" size with random number. there are not equal adjacent numbers
-    //iterate for num of notes in the sequence
-    for (int i = 0; i < counter; i++) {
+  
+
         
-        //check the vector size is < of counter size
-        if (randomSequence.size() < counter) {
+        //CREATE THE RANDOM SEQUENCE
+        //creates a vector of "counter" size with random number. there are not equal adjacent numbers
+        //iterate for num of notes in the sequence
+        for (int i = 0; i < counter; i++) {
             
-            //create random number from 0 to 13
-            int randNote =int(ofRandom(0, NUM_TONES-1));
-            
-            //then, check if the vector is empty
-            if (randomSequence.empty()) {
-                //push this number in the vector
-                randomSequence.push_back(randNote);
-                //push true in the real sequence and pressed sequence. the first number will be always 1
-                //we made the first move null so that they can play with the direction of the pitch
-                realSequence.push_back(true);
-                pressedSequence.push_back(true);
-            } else {
-                //check new number is different from last one
-                if (randNote != randomSequence[randomSequence.size()-1]) {
-                    
-                    //check if it's higher or lower
-                    if (randNote > randomSequence[randomSequence.size()-1]) {
-                        //push this number in the vector
-                        randomSequence.push_back(randNote);
-                        //push value in the seq
-                        realSequence.push_back(true);
+            //check the vector size is < of counter size
+            if (randomSequence.size() < counter) {
+                
+                
+                //create random number from 0 to 13
+                if (bWin || gameCounter == 0) {
+                    randNote = int(ofRandom(0, NUM_TONES-1));
+                } else if (!bWin && gameCounter != 0){
+                    randNote = previousSequence[i];
+                }
+                
+                //then, check if the vector is empty
+                if (randomSequence.empty()) {
+                    //push this number in the vector
+                    randomSequence.push_back(randNote);
+                    //push true in the real sequence and pressed sequence. the first number will be always 1
+                    //we made the first move null so that they can play with the direction of the pitch
+                    realSequence.push_back(true);
+                    pressedSequence.push_back(true);
+                } else {
+                    //check new number is different from last one
+                    if (randNote != randomSequence[randomSequence.size()-1]) {
                         
-                    } else if (randNote < randomSequence[randomSequence.size()-1]) {
-                        //push this number in the vector
-                        randomSequence.push_back(randNote);
-                        //push value in the seq
-                        realSequence.push_back(false);
-                    }
-                    
-                    //if adjacents are equal chose another random note
-                } else randNote = int(ofRandom(0, NUM_TONES-1));
+                        //check if it's higher or lower
+                        if (randNote > randomSequence[randomSequence.size()-1]) {
+                            //push this number in the vector
+                            randomSequence.push_back(randNote);
+                            //push value in the seq
+                            realSequence.push_back(true);
+                            
+                        } else if (randNote < randomSequence[randomSequence.size()-1]) {
+                            //push this number in the vector
+                            randomSequence.push_back(randNote);
+                            //push value in the seq
+                            realSequence.push_back(false);
+                        }
+                        
+                        //if adjacents are equal chose another random note
+                    } else randNote = int(ofRandom(0, NUM_TONES-1));
+                }
             }
-        }
-    }
+        } //end for
     
-    // adjust the first dude THE CORRECT SEQUENCE OF BOOLEANS
+    
+    // adjust the first dude THE CORRECT SEQUENCE OF BOOLEANS:::: USED IN A PREVIOUS VERSION--EACH PRESS IS A NOTE
 //    if (randomSequence.size() > 0 && randomSequence.size() == counter) {
 //        
 //        if (randomSequence[1] > randomSequence[0]) {
@@ -503,6 +526,7 @@ void ofApp::loadSequence(){
     if (randomSequence.size() == counter && realSequence.size() == counter) {
         bLoadSeq = true;
         gameCounter++;
+        previousSequence = randomSequence;
         
     } else loadSequence();
     
@@ -539,6 +563,7 @@ void ofApp::emptySequence(){
     
     //check if it's not empty
     if (!randomSequence.empty()) {
+        
         randomSequence.clear();
         realSequence.clear();
         pressedSequence.clear();
@@ -637,7 +662,7 @@ void ofApp::drawDebug(bool b){
             ofDrawBitmapString("is playing? " + ofToString(player[randomSequence[playerCounter]].isPlaying()), 20, 180);
         }
         ofDrawBitmapString("INSTRUMENT " + ofToString(folderName[randFold]) + " " + ofToString(leftButt.getbPitch()), 20, 200);
-        ofDrawBitmapString("DIFFICULTY " + ofToString(difficulty()), 670, 20);
+        ofDrawBitmapString("DIFFICULTY " + ofToString(difficulty()), 800, 20);
        
         
         for (int i = 0; i < realSequence.size(); i++) {
@@ -653,7 +678,9 @@ void ofApp::drawDebug(bool b){
         if (randomSequence.size() > 0) {
             
             for (int i = 0; i < counter; i++) {
-                ofDrawBitmapString("SEQ " + ofToString(randomSequence[i]), 570, 20 + 20*i);
+                ofDrawBitmapString("Random SEQ " + ofToString(randomSequence[i]), 570, 20 + 20*i);
+                ofDrawBitmapString("Previo SEQ " + ofToString(previousSequence[i]), 670, 20 + 20*i);
+
                 if (playerCounter>0) {
                     ofDrawBitmapString("RANDOM SEQ INDEX " + ofToString(randomSequence[playerCounter]), 20, 120);
                 }
