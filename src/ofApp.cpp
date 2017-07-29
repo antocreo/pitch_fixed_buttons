@@ -7,6 +7,7 @@ void ofApp::setup() {
     ofBackground(200);
     ofEnableBlendMode(OF_BLENDMODE_ALPHA);
     ofSetBackgroundAuto(true);
+    ofToggleFullscreen();
     
     bg.load("images/bg.png");
     
@@ -140,7 +141,7 @@ void ofApp::draw() {
     bg.draw(0, 0, ofGetWidth(), ofGetHeight());
     
     float playW = 400;
-    float plAgW = playW/2;
+    float plAgW = playW/3;
     float playX = (ofGetWidth() - playW)/2;
     float playY = (ofGetHeight() - playW)/2;
     float margin = 30 ;
@@ -183,13 +184,20 @@ void ofApp::draw() {
             //PLAY -- REPEAT
             ofPushStyle();
             if(!playSeq.getbActive()) {
-                playSeq.draw((ofGetWidth() - plAgW)/2, ofGetHeight() - plAgW - margin, plAgW, plAgW, "play_again.png");
-            } else     playSeq.draw((ofGetWidth() - plAgW)/2, ofGetHeight() - plAgW - margin, plAgW, plAgW, "play_again.png");
+                playSeq.draw((ofGetWidth() - plAgW)/2 , (ofGetHeight() - plAgW)/2 , plAgW, plAgW, "play_again.png");
+            } else     playSeq.draw((ofGetWidth() - plAgW)/2 , (ofGetHeight() - plAgW)/2 , plAgW, plAgW, "play_again.png");
             
             ofPopStyle();
             
             
             //TODO - IMPLEMENT SKIP
+            
+            ofPushStyle();
+            if(!playAgain.getbActive()) {
+                playAgain.draw((ofGetWidth() - plAgW)/2, ofGetHeight() - plAgW - margin, plAgW, plAgW, "skip.png");
+            } else     playAgain.draw((ofGetWidth() - plAgW)/2, ofGetHeight() - plAgW - margin, plAgW, plAgW, "skip.png");
+            
+            ofPopStyle();
             
             
             
@@ -304,11 +312,8 @@ void ofApp::keyPressed(int key) {
     
     
     //SKIP ---  TODO
-    if (key == playAgainKey) {
-        if (bButtonsActive) {
-            playAgain.setbActive(!playAgain.getbActive());
-        }
-        
+    if (bButtonsActive && key == playAgainKey) {
+        resetPulse();
     }
     
 }
@@ -346,19 +351,19 @@ void ofApp::keyReleased(int key) {
     
     
     //SKIP BUTTON
-     if (key == playAgainKey) {
-        if (bButtonsActive) {
-            playAgain.setbActive(!playAgain.getbActive());
-            playAgainCounter++; // for log stats
-            playerCounter = 0;
-            player[randomSequence[playerCounter]].play();
-        }
-    }
+     if (bButtonsActive && key == playAgainKey) {
+         togglePlay();
+         bWin = true;
+     }
     
 
     //debug
     if (key == 'd') {
         bDebug = !bDebug;
+    }
+    
+    if (key == 'f') {
+        ofToggleFullscreen();
     }
 }
 
@@ -398,7 +403,6 @@ void ofApp::mousePressed(int x, int y, int button) {
     //SKIP BUTTON
     if (playAgain.getRectangle().inside(x, y)) {
         if (bButtonsActive) {
-            playAgain.setbActive(!playAgain.getbActive());
             resetPulse();
         }
     }
@@ -447,10 +451,8 @@ void ofApp::mouseReleased(int x, int y, int button){
     //SKIP BUTTON
     if (playAgain.getRectangle().inside(x, y)) {
         if (bButtonsActive) {
-            playAgain.setbActive(!playAgain.getbActive());
-            playAgainCounter++; // for log stats
-            playerCounter = 0;
-            player[randomSequence[playerCounter]].play();
+            togglePlay();
+            bWin = true;
         }
     }
 }
