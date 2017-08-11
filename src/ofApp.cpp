@@ -63,7 +63,7 @@ void ofApp::setup() {
 //--------------------------------------------------------------
 void ofApp::update() {
     
-    ofSoundUpdate();
+//    ofSoundUpdate();
     //update buttons only for the animation pulse.
     leftButt.update(1, player[randomSequence[pressedSequence.size()-1]], 1);
     rightButt.update(1, player[randomSequence[pressedSequence.size()-1]], 1);
@@ -127,7 +127,9 @@ void ofApp::update() {
     //update the video
     if (bGameover && !player[randomSequence[playerCounter]].isPlaying()) {
         if (bWin) {
-            winVideo.play();
+            if (!winVideo.isPlaying()) {
+                winVideo.play();
+            }
             winVideo.update();
         }
     }
@@ -182,24 +184,26 @@ void ofApp::draw() {
             ofPopStyle();
             
             //PLAY -- REPEAT
-            ofPushStyle();
-            if(!playSeq.getbActive()) {
-                playSeq.draw((ofGetWidth() - plAgW)/2 , (ofGetHeight() - plAgW)/2 , plAgW, plAgW, "play_again.png");
-            } else     playSeq.draw((ofGetWidth() - plAgW)/2 , (ofGetHeight() - plAgW)/2 , plAgW, plAgW, "play_again.png");
+
             
-            ofPopStyle();
-            
+                ofPushStyle();
+                if(!playSeq.getbActive()) {
+                    playSeq.draw((ofGetWidth() - plAgW)/2 , (ofGetHeight() - plAgW)/2 , plAgW, plAgW, "play_again.png");
+                } else     playSeq.draw((ofGetWidth() - plAgW)/2 , (ofGetHeight() - plAgW)/2 , plAgW, plAgW, "play_again.png");
+                
+                ofPopStyle();
+                
             
             //TODO - IMPLEMENT SKIP
             
-            ofPushStyle();
-            if(!playAgain.getbActive()) {
-                playAgain.draw((ofGetWidth() - plAgW)/2, ofGetHeight() - plAgW - margin, plAgW, plAgW, "skip.png");
-            } else     playAgain.draw((ofGetWidth() - plAgW)/2, ofGetHeight() - plAgW - margin, plAgW, plAgW, "skip.png");
-            
-            ofPopStyle();
-            
-            
+                ofPushStyle();
+                if(!playAgain.getbActive()) {
+                    playAgain.draw((ofGetWidth() - plAgW)/2, ofGetHeight() - plAgW - margin, plAgW, plAgW, "skip.png");
+                } else     playAgain.draw((ofGetWidth() - plAgW)/2, ofGetHeight() - plAgW - margin, plAgW, plAgW, "skip.png");
+                
+                ofPopStyle();
+
+
             
             
             //just drawing lines to get the center.
@@ -259,7 +263,6 @@ void ofApp::draw() {
     
     //DRAWING THE WIN OR LOSE MESSAGE
     if (bGameover && !player[randomSequence[playerCounter]].isPlaying()) {
-        string message;
         if (bWin) {
             ofPushStyle();
             ofSetRectMode(OF_RECTMODE_CENTER);
@@ -433,7 +436,7 @@ void ofApp::mouseReleased(int x, int y, int button){
     
     //PLAY -- REPEAT
         //play button is a toggle
-    if (!bButtonsActive && playSeq.getRectangle().inside(x, y) ) {
+    if (!bButtonsActive && playSeq.getRectangle().inside(x, y)) {
         togglePlay();
     }
     
@@ -887,7 +890,9 @@ void ofApp::loadInstrument(){
     //load the players
     for (int i = 0; i <(int) chosenDir.size(); i++) {
         player.push_back(*new ofSoundPlayer);
+        chosenDir.sort();
         player[i].load(chosenDir.getPath(i), true);
+//        cout<< chosenDir.getPath(i) <<endl;
     }
 
 }
